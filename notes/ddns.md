@@ -3,6 +3,7 @@
 * https://www.changeip.com/
     * https://www.changeip.com/accounts/clientarea.php
 * https://docs.is-a.dev/domain-structure/
+* https://www.duckdns.org/
 
 ## DNS Record-Types
 

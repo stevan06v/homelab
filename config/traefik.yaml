@@ -1,16 +1,30 @@
 global:
   checkNewVersion: true
   sendAnonymousUsage: false
+
 log:
   level: DEBUG
+  
 api: 
   dashboard: true
   insecure: true
+
 entryPoints:
   web:
     address: :80
   websecure:
     address: :443
+
+certificatesResolvers:
+  ssl:
+    acme:
+      email: stevanvlajic5@gmail.com
+      storage: /certs/acme.json
+      caServer: https://acme-v02.api.letsencrypt.org/directory
+      httpChallenge:
+        # used during the challenge
+        entryPoint: web
+
 providers:
   docker: 
     endpoint: "unix:///var/run/docker.sock"
