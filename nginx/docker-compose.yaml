@@ -4,7 +4,7 @@ services:
     volumes:
       - ./html:/usr/share/nginx/html:ro
     networks:
-      - traefik
+      - traefik_network
     labels: 
       - "traefik.enable=true"
       - "traefik.http.routers.nginx.rule=Host(`website.stevan.sexidude.com`)"
