@@ -9,7 +9,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.nginx.rule=Host(`website.stevan.sexidude.com`)"
       - "traefik.http.routers.nginx.entrypoints=web"
-      - "traefik.http.services.nginx.loadbalancer.server.port=80"
     restart: unless-stopped
 
 networks:
