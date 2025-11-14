@@ -17,4 +17,3 @@ services:
 
 networks:
   traefik:
-    name: traefik_network
