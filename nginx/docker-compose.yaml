@@ -2,12 +2,16 @@ services:
   nginx:
     container_name: website
     image: nginx:latest
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
     networks:
       - traefik
+    ports:
+      - "8080:80"
     labels: 
       - traefik.enable=true
       - traefik.http.routers.nginx-http.rule=Host(`website.stevan.sexidude.com`)
-      - traefik.http.routers.nginx-http.entrypoints=web
+      - traefik.http.routers.nginx-http.entrypoints=website
     restart: unless-stopped
 
 networks:
