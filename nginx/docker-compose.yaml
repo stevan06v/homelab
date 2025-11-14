@@ -1,0 +1,15 @@
+services:
+  nginx:
+    container_name: website
+    image: nginx:latest
+    networks:
+      - traefik
+    labels: 
+      - traefik.enable=true
+      - traefik.http.routers.nginx-http.rule=Host(`website.stevan.sexidude.com`)
+      - traefik.http.routers.nginx-http.entrypoints=web
+    restart: unless-stopped
+
+networks:
+  traefik:
+    external: true

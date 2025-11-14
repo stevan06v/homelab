@@ -12,7 +12,7 @@ fi
 
 # ls 
 if ! grep -qx "alias ls -l='ls -lah'" "$BASHRC"; then
-    echo "alias ls-lah='ls -lah'" >> "$BASHRC"
+    echo "alias ll='ls -lah'" >> "$BASHRC"
     echo "Added: alias ls-lah='ls -lah'"
 else
     echo "alias ls-lah already exists"
