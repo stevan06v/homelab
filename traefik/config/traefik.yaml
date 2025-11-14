@@ -19,7 +19,7 @@ certificatesResolvers:
   ssl:
     acme:
       email: stevanvlajic5@gmail.com
-      storage: /letsencrypt/acme.json
+      storage: ./letsencrypt/acme.json
       caServer: https://acme-v02.api.letsencrypt.org/directory
       httpChallenge:
         # used during the challenge
