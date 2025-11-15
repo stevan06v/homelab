@@ -18,3 +18,8 @@ services:
     extends:
       file: ./wgeasy/docker-compose.yaml
       service: wg-easy
+
+networks:
+  traefik:
+    external: true        # if you're treating traefik_network as a pre-created shared network
+    name: traefik_network
