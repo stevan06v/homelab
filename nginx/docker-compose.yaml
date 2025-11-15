@@ -8,7 +8,15 @@ services:
     labels: 
       - "traefik.enable=true"
       - "traefik.http.routers.nginx.rule=Host(`website.stevan.sexidude.com`)"
-      - "traefik.http.routers.nginx.entrypoints=web"
+      - "traefik.http.routers.nginx.entrypoints=websecure"
+      - "traefik.http.routers.nginx.tls=true"
+      - "traefik.http.routers.nginx.tls.certresolver=ssl"
+
+      # Optional: HTTP → HTTPS redirect
+      - "traefik.http.routers.nginx-http.rule=Host(`website.stevan.sexidude.com`)"
+      - "traefik.http.routers.nginx-http.entrypoints=web"
+      - "traefik.http.routers.nginx-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
     restart: unless-stopped
 
 networks:
