@@ -1,0 +1,20 @@
+services:
+  traefik:
+    extends:
+      file: ./traefik/docker-compose.yaml
+      service: traefik
+
+  pihole:
+    extends:
+      file: ./pihole/docker-compose.yaml
+      service: pihole
+
+  nginx:
+    extends:
+      file: ./nginx/docker-compose.yaml
+      service: nginx
+
+  wgeasy:
+    extends:
+      file: ./wgeasy/docker-compose.yaml
+      service: wg-easy
