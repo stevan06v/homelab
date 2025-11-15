@@ -24,22 +24,22 @@ services:
     restart: unless-stopped
     networks:
       - traefik
-labels:
-  - "traefik.enable=true"
+  labels:
+    - "traefik.enable=true"
 
-  # HTTPS router
-  - "traefik.http.routers.pihole.rule=Host(`pihole.stevan.sexidude.com`)"
-  - "traefik.http.routers.pihole.entrypoints=websecure"
-  - "traefik.http.routers.pihole.tls=true"
-  - "traefik.http.routers.pihole.tls.certresolver=ssl"
+    # HTTPS router
+    - "traefik.http.routers.pihole.rule=Host(`pihole.stevan.sexidude.com`)"
+    - "traefik.http.routers.pihole.entrypoints=websecure"
+    - "traefik.http.routers.pihole.tls=true"
+    - "traefik.http.routers.pihole.tls.certresolver=ssl"
 
-  # HTTP -> HTTPS redirect router
-  - "traefik.http.routers.pihole-http.rule=Host(`pihole.stevan.sexidude.com`)"
-  - "traefik.http.routers.pihole-http.entrypoints=web"
-  - "traefik.http.routers.pihole-http.middlewares=redirect-to-https"
+    # HTTP -> HTTPS redirect router
+    - "traefik.http.routers.pihole-http.rule=Host(`pihole.stevan.sexidude.com`)"
+    - "traefik.http.routers.pihole-http.entrypoints=web"
+    - "traefik.http.routers.pihole-http.middlewares=redirect-to-https"
 
-  - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-  
+    - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+    
 networks:
   traefik:
     external: true
