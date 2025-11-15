@@ -34,24 +34,27 @@ services:
       - net.ipv6.conf.all.forwarding=1
       - net.ipv6.conf.default.forwarding=1
 
-    labels: 
-        - "traefik.enable=true"
-        - "traefik.docker.network=traefik_network"
-        - "traefik.http.services.WireGuardService.loadbalancer.server.port=51821"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_network"
 
-        # HTTP
-        - "traefik.http.routers.WireGuardRoute.rule=Host(`vpn.stevan.sexidude.com`)"
-        - "traefik.http.routers.WireGuardRoute.entrypoints=web"
-        - "traefik.http.routers.WireGuardRoute.middlewares=HttpToHttpsRedirectMiddleware"
+      # Service (inside container)
+      - "traefik.http.services.wg-easy.loadbalancer.server.port=51821"
 
-        # HTTPS
-        - "traefik.http.routers.WireGuardRouteSSL.rule=Host(`vpn.stevan.sexidude.com`)"
-        - "traefik.http.routers.WireGuardRouteSSL.entrypoints=websecure"
-        - "traefik.http.routers.WireGuardRouteSSL.tls=true"
-        - "traefik.http.routers.WireGuardRouteSSL.tls.certresolver=MainCertResolver"
-        - "traefik.http.routers.WireGuardRouteSSL.service=WireGuardService"
-        
-        - "traefik.http.middlewares.HttpToHttpsRedirectMiddleware.redirectscheme.scheme=https"
+      # HTTP router (port 80) -> redirect to HTTPS
+      - "traefik.http.routers.wg-easy.rule=Host(`vpn.stevan.sexidude.com`)"
+      - "traefik.http.routers.wg-easy.entrypoints=web"
+      - "traefik.http.routers.wg-easy.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+
+      # HTTPS router (port 443)
+      - "traefik.http.routers.wg-easy.rule=Host(`vpn.stevan.sexidude.com`)"
+      - "traefik.http.routers.wg-easy.entrypoints=websecure"
+      - "traefik.http.routers.wg-easy.tls=true"
+      - "traefik.http.routers.wg-easy.tls.certresolver=ssl"  
+      - "traefik.http.routers.wg-easy.service=wg-easy" # router name
+
 
 
 networks:
