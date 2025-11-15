@@ -36,18 +36,24 @@ services:
 
     labels: 
       - "traefik.enable=true"
-      - "traefik.http.routers.wg-easy.rule=Host(`wireguard.stevan.sexidude.com`)"
-      - "traefik.http.routers.wg-easy.entrypoints=websecure"
-      - "traefik.http.routers.wg-easy.tls=true"
-      - "traefik.http.routers.wg-easy.tls.certresolver=ssl"
+
+      # HTTPS router
+      - "traefik.http.routers.wg-easy-https.rule=Host(`wireguard.stevan.sexidude.com`)"
+      - "traefik.http.routers.wg-easy-https.entrypoints=websecure"
+      - "traefik.http.routers.wg-easy-https.tls=true"
+      - "traefik.http.routers.wg-easy-https.tls.certresolver=ssl"
+      
+      # point to the service
+      - "traefik.http.routers.wg-easy-https.service=wg-easy"
       - "traefik.http.services.wg-easy.loadbalancer.server.port=51821"
 
-      # force redirect http -> https
-      - "traefik.http.routers.wg-easy.rule=Host(`wireguard.stevan.sexidude.com`)"
-      - "traefik.http.routers.wg-easy.entrypoints=web"
-      - "traefik.http.routers.wg-easy.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      # HTTP router -> redirect to HTTPS
+      - "traefik.http.routers.wg-easy-http.rule=Host(`wireguard.stevan.sexidude.com`)"
+      - "traefik.http.routers.wg-easy-http.entrypoints=web"
+      - "traefik.http.routers.wg-easy-http.middlewares=redirect-to-https"
 
+      # Redirect middleware
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
 networks:
   traefik:
