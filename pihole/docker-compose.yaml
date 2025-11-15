@@ -25,20 +25,23 @@ services:
     networks:
       - traefik
   labels:
-    - "traefik.enable=true"
+    traefik.enable: "true"
+
+    traefik.docker.network: "traefik_network"  # recommended
 
     # HTTPS router
-    - "traefik.http.routers.pihole.rule=Host(`pihole.stevan.sexidude.com`)"
-    - "traefik.http.routers.pihole.entrypoints=websecure"
-    - "traefik.http.routers.pihole.tls=true"
-    - "traefik.http.routers.pihole.tls.certresolver=ssl"
+    traefik.http.routers.pihole.rule: "Host(`pihole.stevan.sexidude.com`)"
+    traefik.http.routers.pihole.entrypoints: "websecure"
+    traefik.http.routers.pihole.tls: "true"
+    traefik.http.routers.pihole.tls.certresolver: "ssl"
 
     # HTTP -> HTTPS redirect router
-    - "traefik.http.routers.pihole-http.rule=Host(`pihole.stevan.sexidude.com`)"
-    - "traefik.http.routers.pihole-http.entrypoints=web"
-    - "traefik.http.routers.pihole-http.middlewares=redirect-to-https"
+    traefik.http.routers.pihole-http.rule: "Host(`pihole.stevan.sexidude.com`)"
+    traefik.http.routers.pihole-http.entrypoints: "web"
+    traefik.http.routers.pihole-http.middlewares: "redirect-to-https"
 
-    - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+    # Redirect middleware
+    traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
     
 networks:
   traefik:

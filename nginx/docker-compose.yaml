@@ -5,18 +5,20 @@ services:
       - ./html:/usr/share/nginx/html:ro
     networks:
       traefik:
-    labels: 
-      - "traefik.enable=true"
-      - "traefik.http.routers.nginx.rule=Host(`homelab.stevan.sexidude.com`)"
-      - "traefik.http.routers.nginx.entrypoints=websecure"
-      - "traefik.http.routers.nginx.tls=true"
-      - "traefik.http.routers.nginx.tls.certresolver=ssl"
+    labels:
+      traefik.enable: "true"
+
+      # HTTPS router
+      traefik.http.routers.nginx.rule: "Host(`homelab.stevan.sexidude.com`)"
+      traefik.http.routers.nginx.entrypoints: "websecure"
+      traefik.http.routers.nginx.tls: "true"
+      traefik.http.routers.nginx.tls.certresolver: "ssl"
 
       # Optional: HTTP → HTTPS redirect
-      - "traefik.http.routers.nginx-http.rule=Host(`homelab.stevan.sexidude.com`)"
-      - "traefik.http.routers.nginx-http.entrypoints=web"
-      - "traefik.http.routers.nginx-http.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      traefik.http.routers.nginx-http.rule: "Host(`homelab.stevan.sexidude.com`)"
+      traefik.http.routers.nginx-http.entrypoints: "web"
+      traefik.http.routers.nginx-http.middlewares: "redirect-to-https"
+      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
     restart: unless-stopped
 
 networks:
