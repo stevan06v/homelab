@@ -8,7 +8,7 @@ services:
     labels: 
       - "traefik.enable=true"
       - "traefik.http.routers.nginx.rule=Host(`website.stevan.sexidude.com`)"
-      - "traefik.http.routers.nginx.entrypoints=web"
+      - "traefik.http.routers.nginx.entrypoints=websecure"
     restart: unless-stopped
 
 networks:
