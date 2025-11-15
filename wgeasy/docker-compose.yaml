@@ -35,22 +35,24 @@ services:
       - net.ipv6.conf.default.forwarding=1
 
     labels: 
-      - "traefik.enable=true"
-      - "traefik.http.services.WireGuardService.loadbalancer.server.port=51821"
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik_network"
+        - "traefik.http.services.WireGuardService.loadbalancer.server.port=51821"
 
-      - "traefik.docker.network=traefik_network"
-      # HTTPS router
-      - "traefik.http.routers.WireGuardRoute.service=WireGuardService"
-      # Change this to your host's public address
-      - "traefik.http.routers.WireGuardRoute.rule=Host(`vpn.stevan.sexidude.com`)"
-      - "traefik.http.routers.WireGuardRoute.entrypoints=web"
-      - "traefik.http.routers.WireGuardRoute.middlewares=HttpToHttpsRedirectMiddleware"
-      # https
-      - "traefik.http.routers.WireGuardRouteSSL.service=WireGuardService"
-      # Change this to your host's public address
-      - "traefik.http.routers.WireGuardRouteSSL.rule=Host(`vpn.stevan.sexidude.com`)"
-      - "traefik.http.routers.WireGuardRouteSSL.entrypoints=websecure"
-      - "traefik.http.routers.WireGuardRouteSSL.tls.certresolver=MainCertResolver"
+        # HTTP
+        - "traefik.http.routers.WireGuardRoute.rule=Host(`vpn.stevan.sexidude.com`)"
+        - "traefik.http.routers.WireGuardRoute.entrypoints=web"
+        - "traefik.http.routers.WireGuardRoute.middlewares=HttpToHttpsRedirectMiddleware"
+
+        # HTTPS
+        - "traefik.http.routers.WireGuardRouteSSL.rule=Host(`vpn.stevan.sexidude.com`)"
+        - "traefik.http.routers.WireGuardRouteSSL.entrypoints=websecure"
+        - "traefik.http.routers.WireGuardRouteSSL.tls=true"
+        - "traefik.http.routers.WireGuardRouteSSL.tls.certresolver=MainCertResolver"
+        - "traefik.http.routers.WireGuardRouteSSL.service=WireGuardService"
+        
+        - "traefik.http.middlewares.HttpToHttpsRedirectMiddleware.redirectscheme.scheme=https"
+
 
 networks:
   traefik:
