@@ -13,9 +13,6 @@ services:
     container_name: wg-easy
     networks:
       traefik:
-      wg:
-        ipv4_address: 10.42.42.42
-        ipv6_address: fdcc:ad94:bacf:61a3::2a
     volumes:
       - etc_wireguard:/etc/wireguard
       - /lib/modules:/lib/modules:ro
@@ -40,20 +37,17 @@ services:
 
       # Service (inside container)
       - "traefik.http.services.wg-easy.loadbalancer.server.port=51821"
-
-      # HTTP router (port 80) -> redirect to HTTPS
-      - "traefik.http.routers.wg-easy.rule=Host(`vpn.stevan.sexidude.com`)"
-      - "traefik.http.routers.wg-easy.entrypoints=web"
-      - "traefik.http.routers.wg-easy.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-
-
-      # HTTPS router (port 443)
       - "traefik.http.routers.wg-easy.rule=Host(`vpn.stevan.sexidude.com`)"
       - "traefik.http.routers.wg-easy.entrypoints=websecure"
       - "traefik.http.routers.wg-easy.tls=true"
-      - "traefik.http.routers.wg-easy.tls.certresolver=ssl"  
-      - "traefik.http.routers.wg-easy.service=wg-easy" # router name
+      - "traefik.http.routers.wg-easy.tls.certresolver=ssl"
+
+      # Optional: HTTP → HTTPS redirect
+      - "traefik.http.routers.wg-easy-http.rule=Host(`vpn.stevan.sexidude.com`)"
+      - "traefik.http.routers.wg-easy-http.entrypoints=web"
+      - "traefik.http.routers.wg-easy-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      
 
 
 
@@ -61,11 +55,3 @@ networks:
   traefik:
       external: true
       name: traefik_network 
-  wg:
-    driver: bridge
-    enable_ipv6: true
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.42.42.0/24
-        - subnet: fdcc:ad94:bacf:61a3::/64
