@@ -6,7 +6,7 @@ services:
     environment:
     #  Optional:
       - PORT=51821
-      - HOST=0.0.0.0
+      - WG_HOST=wireguard.stevan.sexidude.com
       - INSECURE=false 
 
     image: ghcr.io/wg-easy/wg-easy:15
@@ -36,24 +36,21 @@ services:
 
     labels: 
       - "traefik.enable=true"
+      - "traefik.http.services.WireGuardService.loadbalancer.server.port=51821"
 
+      - "traefik.docker.network=traefik_network"
       # HTTPS router
-      - "traefik.http.routers.wg-easy-https.rule=Host(`wireguard.stevan.sexidude.com`)"
-      - "traefik.http.routers.wg-easy-https.entrypoints=websecure"
-      - "traefik.http.routers.wg-easy-https.tls=true"
-      - "traefik.http.routers.wg-easy-https.tls.certresolver=ssl"
-      
-      # point to the service
-      - "traefik.http.routers.wg-easy-https.service=wg-easy"
-      - "traefik.http.services.wg-easy.loadbalancer.server.port=51821"
-
-      # HTTP router -> redirect to HTTPS
-      - "traefik.http.routers.wg-easy-http.rule=Host(`wireguard.stevan.sexidude.com`)"
-      - "traefik.http.routers.wg-easy-http.entrypoints=web"
-      - "traefik.http.routers.wg-easy-http.middlewares=redirect-to-https"
-
-      # Redirect middleware
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.WireGuardRoute.service=WireGuardService"
+      # Change this to your host's public address
+      - "traefik.http.routers.WireGuardRoute.rule=Host(`vpn.stevan.sexidude.com`)"
+      - "traefik.http.routers.WireGuardRoute.entrypoints=web"
+      - "traefik.http.routers.WireGuardRoute.middlewares=HttpToHttpsRedirectMiddleware"
+      # https
+      - "traefik.http.routers.WireGuardRouteSSL.service=WireGuardService"
+      # Change this to your host's public address
+      - "traefik.http.routers.WireGuardRouteSSL.rule=Host(`vpn.stevan.sexidude.com`)"
+      - "traefik.http.routers.WireGuardRouteSSL.entrypoints=websecure"
+      - "traefik.http.routers.WireGuardRouteSSL.tls.certresolver=MainCertResolver"
 
 networks:
   traefik:
