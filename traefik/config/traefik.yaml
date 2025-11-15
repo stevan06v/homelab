@@ -23,7 +23,7 @@ certificatesResolvers:
       caServer: https://acme-v02.api.letsencrypt.org/directory
       httpChallenge:
         # used during the challenge
-        entryPoint: web
+        entryPoint: websecure
 
 providers:
   docker: 
