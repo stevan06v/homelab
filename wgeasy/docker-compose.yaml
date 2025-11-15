@@ -6,7 +6,7 @@ services:
     environment:
     #  Optional:
       - PORT=51821
-      - WG_HOST=wireguard.stevan.sexidude.com
+      - WG_HOST=vpn.stevan.sexidude.com
       - INSECURE=false 
 
     image: ghcr.io/wg-easy/wg-easy:15
