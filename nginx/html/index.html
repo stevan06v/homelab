@@ -1,11 +1,910 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>My Custom Site</title>
+  <meta charset="UTF-8" />
+  <title>Stevan's Homelab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      /* DARK THEME (default) */
+      --bg: #020617;
+      --bg-alt: #020617;
+      --card-bg: #020617;
+
+      /* soft red + teal/blue mix */
+      --accent: #fb7185;        /* soft red */
+      --accent2: #22c55e;       /* teal/green */
+      --accent3: #38bdf8;       /* cyan/blue */
+
+      --accent-soft: rgba(251, 113, 133, 0.14);
+      --accent2-soft: rgba(34, 197, 94, 0.14);
+      --accent3-soft: rgba(56, 189, 248, 0.12);
+
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: rgba(148, 163, 184, 0.5);
+      --radius-xl: 1.6rem;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.9);
+    }
+
+    /* LIGHT THEME OVERRIDES */
+    :root[data-theme="light"] {
+      --bg: #f3f4f6;
+      --bg-alt: #f9fafb;
+      --card-bg: #ffffff;
+
+      --accent: #f97373;
+      --accent2: #16a34a;
+      --accent3: #0ea5e9;
+
+      --accent-soft: rgba(248, 113, 113, 0.14);
+      --accent2-soft: rgba(22, 163, 74, 0.14);
+      --accent3-soft: rgba(14, 165, 233, 0.12);
+
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border-subtle: rgba(148, 163, 184, 0.5);
+      --shadow-soft: 0 14px 32px rgba(148, 163, 184, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #0b1120 0, var(--bg) 52%),
+        radial-gradient(circle at bottom, #020617 0, #000 70%);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      transition: background 200ms ease-out, color 200ms ease-out;
+    }
+
+    :root[data-theme="light"] body {
+      background:
+        radial-gradient(circle at top, #e5e7eb 0, #f9fafb 55%),
+        radial-gradient(circle at bottom, #e5e7eb 0, #e5e7eb 70%);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1400px;
+      min-height: min(90vh, 800px);
+      background: radial-gradient(circle at top, #020617 0, var(--bg-alt) 55%);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      position: relative;
+      transition:
+        background 200ms ease-out,
+        border-color 200ms ease-out,
+        box-shadow 200ms ease-out;
+    }
+
+    :root[data-theme="light"] .page {
+      background: radial-gradient(circle at top, #ffffff 0, #f3f4f6 55%);
+    }
+
+    /* SOFT MIXED GRADIENT BLOBS */
+    .page::before,
+    .page::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(80px);
+      opacity: 0.5;
+      pointer-events: none;
+      transition: opacity 200ms ease-out, background 200ms ease-out;
+    }
+
+    .page::before {
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle at 30% 0,
+        rgba(251, 113, 133, 0.55),
+        rgba(56, 189, 248, 0.35)
+      );
+      top: -80px;
+      right: -60px;
+    }
+
+    .page::after {
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle at 70% 100%,
+        rgba(34, 197, 94, 0.45),
+        rgba(251, 191, 36, 0.28)
+      );
+      bottom: -80px;
+      left: -70px;
+    }
+
+    :root[data-theme="light"] .page::before {
+      opacity: 0.35;
+      background: radial-gradient(circle at 30% 0,
+        rgba(252, 165, 165, 0.7),
+        rgba(191, 219, 254, 0.4)
+      );
+    }
+
+    :root[data-theme="light"] .page::after {
+      opacity: 0.35;
+      background: radial-gradient(circle at 70% 100%,
+        rgba(187, 247, 208, 0.7),
+        rgba(254, 243, 199, 0.5)
+      );
+    }
+
+    .inner {
+      position: relative;
+      z-index: 1;
+      padding: 28px 22px 22px;
+    }
+
+    @media (min-width: 768px) {
+      .inner {
+        padding: 34px 32px 26px;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .inner {
+        padding: 40px 40px 30px;
+      }
+    }
+
+    /* HEADER */
+    .header {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    @media (min-width: 768px) {
+      .header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        margin-bottom: 30px;
+      }
+    }
+
+    .title-block {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .title-block {
+        align-items: flex-start;
+      }
+    }
+
+    .logo-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0,
+        rgba(251, 113, 133, 0.9),
+        rgba(56, 189, 248, 0.8)
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(248, 113, 113, 0.85);
+      box-shadow:
+        0 0 0 4px rgba(248, 113, 113, 0.16),
+        0 8px 22px rgba(15, 23, 42, 0.9);
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: 0.06em;
+      color: #fef2f2;
+      transition:
+        background 200ms ease-out,
+        border-color 200ms ease-out,
+        box-shadow 200ms ease-out;
+    }
+
+    :root[data-theme="light"] .logo-circle {
+      box-shadow:
+        0 0 0 4px rgba(248, 113, 113, 0.12),
+        0 6px 16px rgba(148, 163, 184, 0.5);
+    }
+
+    .title-text h1 {
+      font-size: clamp(1.5rem, 2vw + 1.1rem, 2.1rem);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .title-text h1 span.accent-pill {
+      font-size: 0.72rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.9);
+      transition:
+        background 200ms ease-out,
+        border-color 200ms ease-out,
+        color 200ms ease-out;
+    }
+
+    :root[data-theme="light"] .title-text h1 span.accent-pill {
+      background: #eef2ff;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .status-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    @media (min-width: 480px) {
+      .status-bar {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
+      }
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(34, 197, 94, 0.7);
+      color: #bbf7d0;
+      font-size: 0.82rem;
+      transition:
+        background 200ms ease-out,
+        border-color 200ms ease-out,
+        color 200ms ease-out;
+    }
+
+    :root[data-theme="light"] .status-pill {
+      background: #ecfdf5;
+      color: #047857;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #bbf7d0 0, #22c55e 40%, #16a34a 80%);
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.35);
+    }
+
+    .datetime {
+      font-feature-settings: "tnum" 1, "lnum" 1;
+      font-variant-numeric: tabular-nums;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-subtle);
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition:
+        background 200ms ease-out,
+        border-color 200ms ease-out,
+        color 200ms ease-out;
+    }
+
+    :root[data-theme="light"] .datetime {
+      background: #ffffff;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition:
+        background 200ms ease-out,
+        border-color 200ms ease-out,
+        color 200ms ease-out,
+        transform 100ms ease-out;
+    }
+
+    .theme-toggle span.icon {
+      font-size: 0.95rem;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    :root[data-theme="light"] .theme-toggle {
+      background: #ffffff;
+    }
+
+    /* SECTION HEADING */
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(31, 41, 55, 0.85);
+      transition: border-color 200ms ease-out;
+    }
+
+    :root[data-theme="light"] .section-heading {
+      border-top-color: rgba(209, 213, 219, 0.9);
+    }
+
+    .section-heading h2 {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      padding-top: 10px;
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      opacity: 0.9;
+      padding-top: 10px;
+      text-align: right;
+    }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    @media (min-width: 720px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    /* CARDS — gradients but softer, mixed colors */
+    .card {
+      position: relative;
+      border-radius: 1.1rem;
+      padding: 16px 16px 14px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(251, 113, 133, 0.11),
+          rgba(56, 189, 248, 0.08)
+        ),
+        var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition:
+        transform 140ms ease-out,
+        box-shadow 140ms ease-out,
+        border-color 140ms ease-out,
+        background 140ms ease-out;
+      cursor: default;
+      overflow: hidden;
+    }
+
+    :root[data-theme="light"] .card {
+      box-shadow: 0 10px 20px rgba(148, 163, 184, 0.4);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(252, 165, 165, 0.18),
+          rgba(191, 219, 254, 0.16)
+        ),
+        var(--card-bg);
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.8);
+      border-color: rgba(248, 113, 113, 0.9);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(251, 113, 133, 0.18),
+          rgba(34, 197, 94, 0.14),
+          rgba(56, 189, 248, 0.12)
+        ),
+        var(--card-bg);
+    }
+
+    :root[data-theme="light"] .card:hover {
+      box-shadow: 0 14px 24px rgba(148, 163, 184, 0.6);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(252, 165, 165, 0.22),
+          rgba(187, 247, 208, 0.18),
+          rgba(191, 219, 254, 0.18)
+        ),
+        var(--card-bg);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-title {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .card-title span.name {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .card-title span.desc {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .chip {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition:
+        background 200ms ease-out,
+        border-color 200ms ease-out,
+        color 200ms ease-out;
+    }
+
+    :root[data-theme="light"] .chip {
+      background: #f9fafb;
+    }
+
+    .card-body {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .card-body p {
+      margin-bottom: 10px;
+    }
+
+    .links-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .link-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: #020617;
+      color: var(--text-main);
+      transition:
+        border-color 130ms ease-out,
+        background 130ms ease-out,
+        transform 130ms ease-out;
+      white-space: nowrap;
+    }
+
+    :root[data-theme="light"] .link-pill {
+      background: #f9fafb;
+    }
+
+    .link-pill .label {
+      font-weight: 500;
+    }
+
+    .link-pill .url {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .link-pill span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .link-pill.local span.dot {
+      background: var(--accent2);
+    }
+
+    .link-pill:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      transform: translateY(-1px);
+    }
+
+    .link-pill.local:hover {
+      border-color: var(--accent2);
+      background: var(--accent2-soft);
+    }
+
+    .footer {
+      margin-top: 22px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(55, 65, 81, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      transition: border-color 200ms ease-out;
+    }
+
+    :root[data-theme="light"] .footer {
+      border-top-color: rgba(209, 213, 219, 0.9);
+    }
+
+    @media (min-width: 640px) {
+      .footer {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .footer span strong {
+      color: var(--text-main);
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dashed transparent;
+      padding-bottom: 1px;
+    }
+
+    .footer a:hover {
+      border-bottom-color: var(--accent);
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello from my Nginx container 🎉</h1>
-  <p>This is a custom page served behind Traefik.</p>
+  <main class="page">
+    <div class="inner">
+      <!-- HEADER -->
+      <header class="header">
+        <div class="title-block">
+          <div class="logo-circle">
+            <span>SH</span>
+          </div>
+          <div class="title-text">
+            <h1>
+              Stevan's Homelab
+              <span class="accent-pill">Gateway</span>
+            </h1>
+            <p class="subtitle">
+              Central entrypoint to my self-hosted services.
+            </p>
+          </div>
+        </div>
+
+        <div class="status-bar">
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            <span>Online</span>
+          </div>
+          <div id="datetime" class="datetime">
+            Loading time…
+          </div>
+          <button id="theme-toggle" class="theme-toggle" type="button">
+            <span class="icon">🌙</span>
+            <span class="label">Dark</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- SECTION TITLE -->
+      <section>
+        <div class="section-heading">
+          <h2>Services</h2>
+          <p class="hint">Click a card to open local or public endpoints.</p>
+        </div>
+
+        <!-- SERVICES GRID -->
+        <div class="grid">
+          <!-- TRAEFIK -->
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="name">Traefik Dashboard</span>
+                <span class="desc">Reverse proxy &amp; edge router.</span>
+              </div>
+              <span class="chip">Core Routing</span>
+            </div>
+            <div class="card-body">
+              <p>Inspect routes, middlewares, certificates and monitor incoming traffic.</p>
+              <div class="links-row">
+                <a
+                  class="link-pill local"
+                  href="http://192.168.0.223:8080"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="dot"></span>
+                  <span class="label">Local</span>
+                  <span class="url">192.168.0.223:8080</span>
+                </a>
+                <a
+                  class="link-pill"
+                  href="https://traefik.stevan.sexidude.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="dot"></span>
+                  <span class="label">Public</span>
+                  <span class="url">traefik.stevan.sexidude.com</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PI-HOLE -->
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="name">Pi-hole</span>
+                <span class="desc">Network-wide DNS sinkhole.</span>
+              </div>
+              <span class="chip">Networking</span>
+            </div>
+            <div class="card-body">
+              <p>Manage DNS, blocklists and monitor query logs for your home network.</p>
+              <div class="links-row">
+                <a
+                  class="link-pill local"
+                  href="http://192.168.0.223:5000/admin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="dot"></span>
+                  <span class="label">Local</span>
+                  <span class="url">192.168.0.223:5000/admin</span>
+                </a>
+                <a
+                  class="link-pill"
+                  href="https://pihole.stevan.sexidude.com/admin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="dot"></span>
+                  <span class="label">Public</span>
+                  <span class="url">pihole.stevan.sexidude.com/admin</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- VPN / WG-EASY -->
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="name">VPN / WireGuard</span>
+                <span class="desc">Secure remote access via wg-easy.</span>
+              </div>
+              <span class="chip">Remote</span>
+            </div>
+            <div class="card-body">
+              <p>Generate WireGuard configs and manage clients for remote access.</p>
+              <div class="links-row">
+                <a
+                  class="link-pill local"
+                  href="http://192.168.0.223:51821"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="dot"></span>
+                  <span class="label">Local</span>
+                  <span class="url">192.168.0.223:51821</span>
+                </a>
+                <a
+                  class="link-pill"
+                  href="https://vpn.stevan.sexidude.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="dot"></span>
+                  <span class="label">Public</span>
+                  <span class="url">vpn.stevan.sexidude.com</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PORTFOLIO -->
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="name">Portfolio</span>
+                <span class="desc">Public facing personal site.</span>
+              </div>
+              <span class="chip">Public</span>
+            </div>
+            <div class="card-body">
+              <p>Showcase projects, experiments and the evolution of your homelab.</p>
+              <div class="links-row">
+                <a
+                  class="link-pill local"
+                  href="http://192.168.0.223:3000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="dot"></span>
+                  <span class="label">Local</span>
+                  <span class="url">192.168.0.223:3000</span>
+                </a>
+                <a
+                  class="link-pill"
+                  href="https://portfolio.stevan.sexidude.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="dot"></span>
+                  <span class="label">Public</span>
+                  <span class="url">portfolio.stevan.sexidude.com</span>
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="footer">
+        <span>
+          <strong>Disclaimer:</strong> The UI is completely generated by OpenAI's ChatGPT 5.1 :).
+        </span>
+        <span>
+          Served by <strong>nginx</strong> • Managed via <a href="https://traefik.io/" target="_blank" rel="noopener noreferrer">Traefik</a>.
+        </span>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    function updateDateTime() {
+      const el = document.getElementById("datetime");
+      if (!el) return;
+
+      const now = new Date();
+      const options = {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      };
+
+      el.textContent = now.toLocaleString(undefined, options);
+    }
+
+    function applyTheme(theme) {
+      const root = document.documentElement;
+      const toggle = document.getElementById("theme-toggle");
+      if (!toggle) return;
+
+      root.setAttribute("data-theme", theme);
+
+      const icon = toggle.querySelector(".icon");
+      const label = toggle.querySelector(".label");
+
+      if (theme === "light") {
+        icon.textContent = "☀️";
+        label.textContent = "Light";
+      } else {
+        icon.textContent = "🌙";
+        label.textContent = "Dark";
+      }
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem("stevans-homelab-theme");
+      let theme = saved;
+
+      if (!theme) {
+        const prefersDark = window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+        theme = prefersDark ? "dark" : "light";
+      }
+
+      applyTheme(theme);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      initTheme();
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+
+      const toggle = document.getElementById("theme-toggle");
+      if (toggle) {
+        toggle.addEventListener("click", function () {
+          const root = document.documentElement;
+          const current = root.getAttribute("data-theme") || "dark";
+          const next = current === "dark" ? "light" : "dark";
+          applyTheme(next);
+          localStorage.setItem("stevans-homelab-theme", next);
+        });
+      }
+    });
+  </script>
 </body>
 </html>

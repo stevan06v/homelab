@@ -5,7 +5,7 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      #- "80:80/tcp"
+      - "5000:80/tcp"
       #- "443:443/tcp"
       # Uncomment the line below if you are using Pi-hole as your DHCP server
       #- "67:67/udp"
@@ -52,7 +52,7 @@ services:
       traefik.http.middlewares.pihole-admin-redirect.redirectregex.regex: "^https?://pihole\\.stevan\\.sexidude\\.com/?$"
       traefik.http.middlewares.pihole-admin-redirect.redirectregex.replacement: "https://pihole.stevan.sexidude.com/admin"
       traefik.http.middlewares.pihole-admin-redirect.redirectregex.permanent: "true"
-      
+
 networks:
   traefik:
       external: true
