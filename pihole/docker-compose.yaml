@@ -23,7 +23,7 @@ services:
       - SYS_NICE
     restart: unless-stopped
     networks:
-      - traefik
+      traefik:
     labels:
       traefik.enable: "true"
 
@@ -45,5 +45,5 @@ services:
     
 networks:
   traefik:
-    external: true
-    name: traefik_network  
+      external: true
+      name: traefik_network 
