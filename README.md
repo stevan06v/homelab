@@ -11,13 +11,12 @@ The homelab can be accessed through:
 
 Traefik handles TLS certificates (Let’s Encrypt), routing, and secure access to all internal services.
 
----
 
 ## Overview
 
 The homelab consists of several services, each isolated in its own folder with a dedicated `docker-compose.yaml` file. A root compose file orchestrates all services using `extends`.
 
----
+
 
 ## Services
 
@@ -55,7 +54,6 @@ Accessible at:
 
 [https://vpn.stevan.sexidude.com](https://vpn.stevan.sexidude.com)
 
----
 
 ## Starting the Entire Homelab
 
@@ -67,7 +65,6 @@ docker compose up -d
 
 This loads and starts all service stacks using the root compose file.
 
----
 
 ## Stopping the Entire Homelab
 
@@ -75,7 +72,6 @@ This loads and starts all service stacks using the root compose file.
 docker compose up down
 ```
 
----
 
 ## Networking
 
@@ -106,7 +102,6 @@ Secondary DNS: 8.8.8.8
 
 Devices on the LAN resolve DNS through Pi-hole automatically.
 
----
 
 ## SSL Certificates
 
