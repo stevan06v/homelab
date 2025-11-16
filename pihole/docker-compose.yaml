@@ -44,6 +44,14 @@ services:
 
       # Redirect middleware
       traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
+
+        # ⬇️ attach middleware to HTTPS router
+      traefik.http.routers.pihole.middlewares: "pihole-admin-redirect"
+
+      # Middleware: redirect "/" -> "/admin"
+      traefik.http.middlewares.pihole-admin-redirect.redirectregex.regex: "^/$"
+      traefik.http.middlewares.pihole-admin-redirect.redirectregex.replacement: "/admin"
+      traefik.http.middlewares.pihole-admin-redirect.redirectregex.permanent: "true"
     
 networks:
   traefik:

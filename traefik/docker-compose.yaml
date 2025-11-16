@@ -14,6 +14,19 @@ services:
         - ./config/traefik.yaml:/etc/traefik/traefik.yaml:ro
         - ./letsencrypt:/letsencrypt:rw
       restart: unless-stopped
+      labels:
+        traefik.enable: "true"
+        traefik.docker.network: "traefik_network"
+
+        # HTTPS router for the dashboard
+        traefik.http.routers.traefik.rule: "Host(`traefik.stevan.sexidude.com`)"
+        traefik.http.routers.traefik.entrypoints: "websecure"
+        traefik.http.routers.traefik.tls: "true"
+        traefik.http.routers.traefik.tls.certresolver: "ssl"
+
+        # Use the built-in dashboard service
+        traefik.http.routers.traefik.service: "api@internal"
+
 
 networks:
   traefik:
