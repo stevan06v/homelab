@@ -24,6 +24,14 @@ services:
         traefik.http.routers.traefik.tls: "true"
         traefik.http.routers.traefik.tls.certresolver: "ssl"
 
+        # HTTP -> HTTPS redirect router
+        traefik.http.routers.pihole-http.rule: "Host(`traefik.stevan.sexidude.com`)"
+        traefik.http.routers.pihole-http.entrypoints: "web"
+        traefik.http.routers.pihole-http.middlewares: "redirect-to-https"
+
+        # Redirect middleware
+        traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
+
         # Use the built-in dashboard service
         traefik.http.routers.traefik.service: "api@internal"
 
