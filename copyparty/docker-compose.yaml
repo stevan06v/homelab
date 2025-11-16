@@ -36,13 +36,13 @@ services:
 
       # Service (inside container)
       traefik.http.services.copyparty.loadbalancer.server.port: "3923"
-      traefik.http.routers.copyparty.rule: "Host(`ftp.stevan.sexidude.com`)"
+      traefik.http.routers.copyparty.rule: "Host(`copyparty.stevan.sexidude.com`)"
       traefik.http.routers.copyparty.entrypoints: "websecure"
       traefik.http.routers.copyparty.tls: "true"
       traefik.http.routers.copyparty.tls.certresolver: "ssl"
 
       # Optional: HTTP → HTTPS redirect
-      traefik.http.routers.copyparty-http.rule: "Host(`ftp.stevan.sexidude.com`)"
+      traefik.http.routers.copyparty-http.rule: "Host(`copyparty.stevan.sexidude.com`)"
       traefik.http.routers.copyparty-http.entrypoints: "web"
       traefik.http.routers.copyparty-http.middlewares: "redirect-to-https"
       traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
