@@ -22,7 +22,7 @@ services:
 
 networks:
   traefik:
-    external: true        # if you're treating traefik_network as a pre-created shared network
+    external: true    
     name: traefik_network
 
 volumes:
