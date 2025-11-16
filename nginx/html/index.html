@@ -78,9 +78,12 @@
         radial-gradient(circle at bottom, #e5e7eb 0, #e5e7eb 70%);
     }
 
-    @media (max-width: 640px) {
+    /* mobile: anchor page to top and reduce padding so header is not cut */
+    @media (max-width: 768px) {
       body {
-        padding: 12px;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 12px 8px;
       }
     }
 
@@ -205,6 +208,9 @@
     .logo-circle {
       width: 52px;
       height: 52px;
+      min-width: 52px;   /* keep perfect circle */
+      min-height: 52px;  /* keep perfect circle */
+      flex-shrink: 0;    /* prevent squishing in flex row */
       border-radius: 999px;
       background: radial-gradient(circle at 30% 0,
         rgba(251, 113, 133, 0.9),
@@ -234,7 +240,7 @@
     }
 
     .title-text h1 {
-      font-size: clamp(1.5rem, 2vw + 1.1rem, 2.1rem);
+      font-size: clamp(1.4rem, 2vw + 1rem, 2.1rem);
       letter-spacing: 0.05em;
       text-transform: uppercase;
       display: flex;
