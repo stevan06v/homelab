@@ -18,7 +18,11 @@ services:
     extends:
       file: ./wgeasy/docker-compose.yaml
       service: wg-easy
-
+    
+  copyparty:
+    extends:
+      file: ./copyparty/docker-compose.yaml
+      service: copyparty
 
 networks:
   traefik:
