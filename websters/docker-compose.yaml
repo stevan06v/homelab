@@ -21,31 +21,28 @@ services:
     networks:
       traefik:
     restart: unless-stopped
-    ports:
-      - "8069:80"
+    # No host port needed if Traefik is used
+    # ports:
+    #   - "8069:80"
     volumes:
-      - .:/var/www/html:ro
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - app
     labels:
       traefik.enable: "true"
       traefik.docker.network: "traefik_network"
+
       traefik.http.services.websters.loadbalancer.server.port: "80"
 
-      # HTTPS router
       traefik.http.routers.websters.rule: "Host(`websters.stevan.sexidude.com`)"
       traefik.http.routers.websters.entrypoints: "websecure"
       traefik.http.routers.websters.tls: "true"
       traefik.http.routers.websters.tls.certresolver: "ssl"
 
-
-      # HTTP -> HTTPS redirect router
       traefik.http.routers.websters-http.rule: "Host(`websters.stevan.sexidude.com`)"
       traefik.http.routers.websters-http.entrypoints: "web"
       traefik.http.routers.websters-http.middlewares: "redirect-to-https"
 
-      # Redirect middleware
       traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
 
 
