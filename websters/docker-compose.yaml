@@ -10,7 +10,7 @@ services:
     env_file:
       - .env.prod
     volumes:
-      - .:/var/www/html
+      #- .:/var/www/html
       - ./storage:/var/www/html/storage
     depends_on:
       - mysql
@@ -31,19 +31,19 @@ services:
     labels:
       traefik.enable: "true"
       traefik.docker.network: "traefik_network"
-      traefik.http.services.pihole.loadbalancer.server.port: "8069"
+      traefik.http.services.websters.loadbalancer.server.port: "80"
 
       # HTTPS router
-      traefik.http.routers.pihole.rule: "Host(`websters.stevan.sexidude.com`)"
-      traefik.http.routers.pihole.entrypoints: "websecure"
-      traefik.http.routers.pihole.tls: "true"
-      traefik.http.routers.pihole.tls.certresolver: "ssl"
+      traefik.http.routers.websters.rule: "Host(`websters.stevan.sexidude.com`)"
+      traefik.http.routers.websters.entrypoints: "websecure"
+      traefik.http.routers.websters.tls: "true"
+      traefik.http.routers.websters.tls.certresolver: "ssl"
 
 
       # HTTP -> HTTPS redirect router
-      traefik.http.routers.pihole-http.rule: "Host(`websters.stevan.sexidude.com`)"
-      traefik.http.routers.pihole-http.entrypoints: "web"
-      traefik.http.routers.pihole-http.middlewares: "redirect-to-https"
+      traefik.http.routers.websters-http.rule: "Host(`websters.stevan.sexidude.com`)"
+      traefik.http.routers.websters-http.entrypoints: "web"
+      traefik.http.routers.websters-http.middlewares: "redirect-to-https"
 
       # Redirect middleware
       traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: "https"
