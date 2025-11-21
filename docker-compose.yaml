@@ -23,6 +23,21 @@ services:
     extends:
       file: ./copyparty/docker-compose.yaml
       service: copyparty
+  
+  laravel_app:
+    extends:
+      file: ./websters/docker-compose.yaml
+      service: app
+
+  laravel_nginx:
+    extends:
+      file: ./websters/docker-compose.yaml
+      service: nginx
+
+  laravel_mysql:
+    extends:
+      file: ./websters/docker-compose.yaml
+      service: mysql
 
 networks:
   traefik:
